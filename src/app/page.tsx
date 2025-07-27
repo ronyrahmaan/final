@@ -15,7 +15,6 @@ import { Button } from '@/components/ui/button';
 import { GithubButton } from '@/components/ui/github-button';
 import WelcomeModal from '@/components/welcome-modal';
 import { motion } from 'framer-motion';
-import type { Variants } from 'framer-motion';
 import {
   ArrowRight,
   BriefcaseBusiness,
@@ -95,22 +94,22 @@ export default function Home() {
   }, []);
 
   const goToChat = (query: string) => router.push(`/chat?query=${encodeURIComponent(query)}`);
-  /* hero animations (unchanged) */
 
-  const topElementVariants: Variants = {
+  /* hero animations (unchanged) */
+  const topElementVariants = {
     hidden: { opacity: 0, y: -60 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: 'tween' as const, duration: 0.8 },
+      transition: { type: 'ease', duration: 0.8 },
     },
   };
-  const bottomElementVariants: Variants = {
+  const bottomElementVariants = {
     hidden: { opacity: 0, y: 80 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: 'tween' as const, duration: 0.8, delay: 0.2 },
+      transition: { type: 'ease', duration: 0.8, delay: 0.2 },
     },
   };
 

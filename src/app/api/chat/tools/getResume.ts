@@ -6,6 +6,6 @@ export const getResume = tool({
   description: 'This tool shows my resume.',
   parameters: z.object({}),
   async execute() {
-    return "You can download my full CV directly from this portfolio at /rahman_resume.pdf. If there's a particular experience, skill or publication you'd like to discuss, just let me know and I can highlight the most relevant information.";
+    return "You can download my full CV directly from this portfolio at /rahman_resume.pdf. If there's a particular experience, skill or publication you'd like to discuss, let me know and I can highlight the most relevant information. Is there something specific from my CV you'd like to explore together?";
   },
 });
