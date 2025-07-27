@@ -1,5 +1,10 @@
+// This file uses React state for the image carousel and must run on the client.
+// Mark it as a Client Component so Next.js knows to hydrate it on the client.
+'use client';
+
 import Image from 'next/image';
 import { Image as Img } from 'lucide-react';
+import { useState } from 'react';
 import { ChevronRight, Link } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { url } from 'inspector';
@@ -25,23 +30,29 @@ const PROJECT_CONTENT = [
     links: [
       {
         name: 'GitHub Repository',
-        url: 'https://github.com/ronyrahmaan',
+        url: 'https://github.com/ronyrahmaan/LiDAR-Infrastructure-Safety-TxDOT',
       },
       {
         name: 'Research Documentation',
-        url: 'https://github.com/ronyrahmaan',
+        // Replace with the actual URL to your documentation or report
+        url: 'https://drive.google.com/your-research-document.pdf',
       }
     ],
+    // Updated image list for the LiDAR project.  These point to real LiDAR
+    // diagrams stored in the public folder. Each path begins with `/` so
+    // Next.js serves the image from the `public` directory【804110948676109†L461-L466】.
     images: [
-      {
-        src: '/lidar-project-1.png',
-        alt: 'LiDAR data processing pipeline',
-      },
-      {
-        src: '/lidar-project-2.png',
-        alt: 'Real-time sensor data visualization',
-      },
+      { src: '/projects/lidar/pipeline_overview.png', alt: 'LiDAR pipeline overview' },
+      { src: '/projects/lidar/udp_decoding.png', alt: 'LiDAR UDP packet decoding' },
+      { src: '/projects/lidar/calibration_process.png', alt: 'LiDAR calibration process' },
+      { src: '/projects/lidar/background_filtering.png', alt: 'LiDAR background filtering comparison' },
+      { src: '/projects/lidar/dbscan_clustering.png', alt: 'LiDAR DBSCAN clustering diagram' },
+      { src: '/projects/lidar/packet_stream_funnel.png', alt: 'LiDAR packet stream processing funnel' },
+      { src: '/projects/lidar/pcap_recording_funnel.png', alt: 'LiDAR PCAP recording process funnel' },
     ],
+    // Provide a concise code snippet to illustrate the pipeline. This will be
+    // displayed in the project details component.
+    code: `# Simplified example of decoding Velodyne packets and writing CSV\nimport csv, socket\nfrom velodyne_decoder import decode_packet\n\nwith open('output.csv', 'w', newline='') as f:\n    writer = csv.writer(f)\n    writer.writerow(['x','y','z','intensity'])\n    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)\n    sock.bind(('0.0.0.0', 2368))\n    while True:\n        packet, _ = sock.recvfrom(1206)\n        points = decode_packet(packet)\n        writer.writerows(points)`,
   },
   {
     title: 'PolyHope - Hope Speech & Sarcasm Detection',
@@ -174,6 +185,14 @@ const ProjectContent = ({ project }: { project: ProjectProps }) => {
     return <div>Project details not available</div>;
   }
 
+  // Manage state for image carousel. Display one image at a time with
+  // keyboard‑accessible controls. If no images are provided, the carousel
+  // gracefully does not render.
+  const images = projectData.images ?? [];
+  const [currentImg, setCurrentImg] = useState(0);
+  const nextImg = () => setCurrentImg((prev) => (prev + 1) % images.length);
+  const prevImg = () => setCurrentImg((prev) => (prev - 1 + images.length) % images.length);
+
   return (
     <div className="space-y-10">
       {/* Header section with description */}
@@ -234,23 +253,47 @@ const ProjectContent = ({ project }: { project: ProjectProps }) => {
       )}
 
       {/* Images gallery */}
-      {projectData.images && projectData.images.length > 0 && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 gap-4">
-            {projectData.images.map((image, index) => (
-              <div
-                key={index}
-                className="relative aspect-video overflow-hidden rounded-2xl"
+      {/* Image carousel: show one image at a time with arrow controls */}
+      {images.length > 0 && (
+        <div className="relative mx-auto w-full overflow-hidden rounded-2xl bg-neutral-50 dark:bg-neutral-900">
+          <Image
+            src={images[currentImg].src}
+            alt={images[currentImg].alt}
+            width={1280}
+            height={720}
+            // Use object-contain to prevent cropping and add padding for breathing room
+            className="h-72 w-full object-contain p-4 sm:h-96"
+          />
+          {images.length > 1 && (
+            <>
+              <button
+                onClick={prevImg}
+                aria-label="Previous image"
+                className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-lg font-bold text-foreground shadow-md backdrop-blur hover:bg-white dark:bg-neutral-800/80 dark:text-neutral-200 dark:hover:bg-neutral-800"
               >
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className="object-cover transition-transform"
-                />
-              </div>
-            ))}
-          </div>
+                ‹
+              </button>
+              <button
+                onClick={nextImg}
+                aria-label="Next image"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-lg font-bold text-foreground shadow-md backdrop-blur hover:bg-white dark:bg-neutral-800/80 dark:text-neutral-200 dark:hover:bg-neutral-800"
+              >
+                ›
+              </button>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Code snippet section */}
+      {projectData.code && (
+        <div>
+          <h3 className="mb-3 text-sm tracking-wide text-neutral-500 uppercase dark:text-neutral-400">
+            Code Snippet
+          </h3>
+          <pre className="max-h-60 overflow-auto rounded-lg bg-neutral-100 p-4 text-xs font-mono dark:bg-neutral-800">
+            <code>{projectData.code}</code>
+          </pre>
         </div>
       )}
     </div>

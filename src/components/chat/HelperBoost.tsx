@@ -33,14 +33,18 @@ interface HelperBoostProps {
   setInput?: (value: string) => void;
 }
 
+// Define quick questions for the buttons shown under the chat input. These
+// questions are tailored to Md A Rahman and avoid any references to mountain
+// biking or specific schools. They focus on his research, skills and
+// collaboration interests.
 const questions = {
   Me: 'Who are you? I want to know more about you.',
-  Projects: 'What are your projects? What are you working on right now?',
-  Skills: 'What are your skills? Give me a list of your soft and hard skills.',
-  Fun: "What the craziest thing you've ever done? (mb?) What are your hobbies? ",
-  Contact:
-    'How can I reach you? What kind of project would make you say "yes" immediately?',
-};
+  Projects: 'What are your projects? What research are you working on right now?',
+  Skills: 'What are your skills? Give me a list of your technical and research skills.',
+  Fun: 'Tell me about your achievements and background. What are your hobbies?',
+  Contact: 'How can I reach you? Are you open to collaboration?',
+  Experience: 'Tell me about your work experience and roles you have held.',
+} as const;
 
 const questionConfig = [
   { key: 'Me', color: '#329696', icon: Laugh },
@@ -48,19 +52,27 @@ const questionConfig = [
   { key: 'Skills', color: '#856ED9', icon: Layers },
   { key: 'Fun', color: '#B95F9D', icon: PartyPopper },
   { key: 'Contact', color: '#C19433', icon: UserRoundSearch },
-];
+  { key: 'Experience', color: '#F17C0A', icon: BriefcaseIcon },
+] as const;
 
-// Helper drawer data
+// Additional inspiration prompts for the drawer. These prompts encourage
+// visitors to explore Rahman's research, achievements and personal interests.
 const specialQuestions = [
-  'Mountain Bike you said?? Show me!',
   'Who are you?',
   'Can I see your resume?',
   'What projects are you most proud of?',
   'What are your skills?',
   'How can I reach you?',
   "What's the craziest thing you've ever done?",
+  'Tell me about your achievements.',
+  'Tell me about your work experience.',
+  'What technologies do you use for MLOps?',
+  'What are your research interests nowadays?',
 ];
 
+// Grouped questions by category used in the drawer. These have been adapted
+// to remove references to mountain biking and emphasize Rahman's education
+// and research. Visitors can explore different aspects of his work and life.
 const questionsByCategory = [
   {
     id: 'me',
@@ -80,16 +92,18 @@ const questionsByCategory = [
     questions: [
       'Can I see your resume?',
       'What makes you a valuable team member?',
+      'Tell me about your work experience and roles you have held.',
       'Where are you working now?',
       'Why should I hire you?',
       "What's your educational background?",
+      'What technologies do you use for MLOps?',
     ],
   },
   {
     id: 'projects',
     name: 'Projects',
     icon: CodeIcon,
-    questions: ['What projects are you most proud of?'],
+    questions: ['What projects are you most proud of?', 'What are you researching now?'],
   },
   {
     id: 'skills',
@@ -97,7 +111,8 @@ const questionsByCategory = [
     icon: GraduationCapIcon,
     questions: [
       'What are your skills?',
-      'How was your experience at École 42?',
+      'How was your experience at Texas Tech University?',
+      'What tools do you use for MLOps?',
     ],
   },
   {
@@ -105,7 +120,6 @@ const questionsByCategory = [
     name: 'Fun',
     icon: PartyPopper,
     questions: [
-      'Mountain Bike you said?? Show me!',
       "What's the craziest thing you've ever done?",
       'Mac or PC?',
       'What are you certain about that 90% get wrong?',
@@ -121,14 +135,14 @@ const questionsByCategory = [
       'Where are you located?',
     ],
   },
-];
+] as const;
 
-// Animated Chevron component
+// Animated Chevron component used in the tooltip
 const AnimatedChevron = () => {
   return (
     <motion.div
       animate={{
-        y: [0, -4, 0], // Subtle up and down motion
+        y: [0, -4, 0],
       }}
       transition={{
         duration: 1.5,
@@ -174,9 +188,7 @@ export default function HelperBoost({
           {/* Toggle Button */}
           <div
             className={
-              isVisible
-                ? 'mb-2 flex justify-center'
-                : 'mb-0 flex justify-center'
+              isVisible ? 'mb-2 flex justify-center' : 'mb-0 flex justify-center'
             }
           >
             <button
@@ -231,10 +243,8 @@ export default function HelperBoost({
                           <div className="flex items-center gap-3 text-gray-700">
                             <CircleEllipsis
                               className="h-[20px] w-[18px]"
-                              //style={{ color: '#3B82F6' }}
                               strokeWidth={2}
                             />
-                            {/*<span className="text-sm font-medium">More</span>*/}
                           </div>
                         </motion.div>
                       </Drawer.Trigger>

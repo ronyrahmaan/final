@@ -1,3 +1,13 @@
+/**
+ * This is the landing page for Md A Rahman's AI research portfolio. It largely
+ * follows the structure of the original page from the upstream project but
+ * has been adapted to remove references to the previous owner (Raphael
+ * Girud) and to improve the user experience. The quick‑question prompts
+ * align with the updated HelperBoost component and the "Open to
+ * Collaborate" button has been replaced with a modal that outlines
+ * Rahman's collaboration interests and internship opportunities.
+ */
+
 'use client';
 
 import FluidCursor from '@/components/FluidCursor';
@@ -12,18 +22,24 @@ import {
   Layers,
   PartyPopper,
   UserRoundSearch,
+  BriefcaseIcon,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+// Import the modal component that shows collaboration details
+import OpenToCollaborateModal from '@/components/open-to-collaborate-modal';
 
-/* ---------- quick-question data ---------- */
+/* ---------- quick‑question data ---------- */
+// These prompts mirror those in the updated HelperBoost component and are
+// tailored to Md A Rahman's research and interests.
 const questions = {
   Me: 'Who are you? I want to know more about you.',
-  Projects: 'What are your projects? What research are you working on?',
+  Projects: 'What are your projects? What research are you working on right now?',
   Skills: 'What are your skills? Give me a list of your technical and research skills.',
   Fun: 'Tell me about your achievements and background. What are your hobbies?',
-  Contact: 'How can I contact you? Are you open to collaboration?',
+  Contact: 'How can I reach you? Are you open to collaboration?',
+  Experience: 'Tell me about your work experience and roles you have held.',
 } as const;
 
 const questionConfig = [
@@ -32,6 +48,7 @@ const questionConfig = [
   { key: 'Skills', color: '#856ED9', icon: Layers },
   { key: 'Fun', color: '#B95F9D', icon: PartyPopper },
   { key: 'Contact', color: '#C19433', icon: UserRoundSearch },
+  { key: 'Experience', color: '#F17C0A', icon: BriefcaseIcon },
 ] as const;
 
 /* ---------- component ---------- */
@@ -39,6 +56,33 @@ export default function Home() {
   const [input, setInput] = useState('');
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Dynamic roles that rotate after the main heading. Each role represents a
+  // professional descriptor relevant to Rahman's expertise. Colors map to
+  // each role for subtle visual variation. The index increments every few
+  // seconds using a timer.
+  const roles = [
+    'AI Researcher',
+    'AI/ML Engineer',
+    'NLP Specialist',
+    'Generative AI Enthusiast',
+    'Data Scientist',
+  ];
+  const roleColors = [
+    'text-blue-600 dark:text-blue-400',
+    'text-purple-600 dark:text-purple-400',
+    'text-green-600 dark:text-green-400',
+    'text-pink-600 dark:text-pink-400',
+    'text-orange-600 dark:text-orange-400',
+  ];
+  const [roleIndex, setRoleIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRoleIndex((prev) => (prev + 1) % roles.length);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, []);
 
   const goToChat = (query: string) =>
     router.push(`/chat?query=${encodeURIComponent(query)}`);
@@ -82,13 +126,13 @@ export default function Home() {
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 pb-10 md:pb-20">
-      {/* big blurred footer word */}
+      {/* big blurred footer word with Rahman's full name */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center overflow-hidden">
         <div
-          className="hidden bg-gradient-to-b from-neutral-500/10 to-neutral-500/0 bg-clip-text text-[10rem] leading-none font-black text-transparent select-none sm:block lg:text-[16rem]"
+          className="hidden bg-gradient-to-b from-neutral-500/10 to-neutral-500/0 bg-clip-text text-[8rem] leading-none font-black text-transparent select-none sm:block lg:text-[12rem]"
           style={{ marginBottom: '-2.5rem' }}
         >
-          Rahman
+          Md A Rahman
         </div>
       </div>
 
@@ -103,17 +147,8 @@ export default function Home() {
       </div>
 
       <div className="absolute top-6 left-6 z-20">
-        <button
-          onClick={() => goToChat('Are you looking for research collaboration or internship opportunities?')}
-          className="relative flex cursor-pointer items-center gap-2 rounded-full border bg-white/30 px-4 py-1.5 text-sm font-medium text-black shadow-md backdrop-blur-lg transition hover:bg-white/60 dark:border-white dark:text-white dark:hover:bg-neutral-800"
-        >
-          {/* Green pulse dot */}
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
-          </span>
-          Open to Collaborate
-        </button>
+        {/* Use the new modal trigger for collaboration */}
+        <OpenToCollaborateModal />
       </div>
 
       {/* header */}
@@ -128,22 +163,29 @@ export default function Home() {
         </div>
 
         <h2 className="text-secondary-foreground mt-1 text-xl font-semibold md:text-2xl">
-          Hey, I'm Rahman 👋
+          Hey, I'm Md&nbsp;A&nbsp;Rahman
         </h2>
-        <h1 className="text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">
-          AI Research Portfolio
+        {/* Main profession headline */}
+        <h1 className="text-3xl font-bold sm:text-4xl md:text-5xl lg:text-6xl">
+          AI Research Engineer
         </h1>
+        {/* Dynamically rotating descriptors. The colour changes with each role. */}
+        <div
+          className={`mt-2 min-h-[1.5rem] min-w-[14rem] text-base font-medium sm:text-lg md:text-xl ${roleColors[roleIndex]} transition-colors duration-500`}
+        >
+          {roles[roleIndex]}
+        </div>
       </motion.div>
 
-      {/* centre memoji */}
-      <div className="relative z-10 h-52 w-48 overflow-hidden sm:h-72 sm:w-72">
+      {/* centre portrait */}
+      <div className="relative z-10 h-56 w-48 overflow-hidden rounded-xl sm:h-80 sm:w-72">
         <Image
           src="/landing-memojis.png"
-          alt="AI Research Portfolio Hero"
-          width={2000}
-          height={2000}
+          alt="Md A Rahman – Professional Portrait"
+          width={800}
+          height={800}
           priority
-          className="translate-y-14 scale-[2] object-cover"
+          className="object-cover object-center"
         />
       </div>
 
@@ -154,7 +196,7 @@ export default function Home() {
         animate="visible"
         className="z-10 mt-4 flex w-full flex-col items-center justify-center md:px-0"
       >
-        {/* free-form question */}
+        {/* free‑form question */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -182,7 +224,7 @@ export default function Home() {
           </div>
         </form>
 
-        {/* quick-question grid */}
+        {/* quick‑question grid */}
         <div className="mt-4 grid w-full max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3 md:grid-cols-5">
           {questionConfig.map(({ key, color, icon: Icon }) => (
             <Button

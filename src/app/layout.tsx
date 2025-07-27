@@ -73,7 +73,14 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link rel="icon" href="/favicon.svg" sizes="any" />
       </head>
+      {/*
+        Add suppressHydrationWarning to avoid mismatches when browser
+        extensions inject attributes into the body element before React
+        hydrates. Without this, Next.js can throw hydration errors if
+        additional attributes (e.g., bis_register) appear on the client.
+      */}
       <body
+        suppressHydrationWarning
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
           inter.variable,
