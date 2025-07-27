@@ -1,14 +1,12 @@
 import { tool } from 'ai';
 import { z } from 'zod';
 
-// Provides information about the types of positions and collaborations Md A Rahman
-// is interested in. This should be used when the user asks about internships,
-// full‑time roles or collaboration opportunities.
+// Provides information about the types of positions and collaborations Rahman is interested in.
 export const getInternship = tool({
   description:
     'This tool provides information about the types of positions and collaborations I am interested in, such as internships and full‑time roles.',
   parameters: z.object({}),
   async execute() {
-    return "I'm currently open to research and industry roles in AI/ML, including generative AI, natural language processing and large language model engineering. I welcome opportunities ranging from internships to full‑time positions and collaborative research projects. I'm particularly interested in working on LLMs, multimodal systems, ML model optimization, and real‑time sensor data for smart city or robotics applications. I'm excited to collaborate with research labs, forward‑thinking startups and established companies across technology, healthcare and robotics sectors.";
+    return "I'm open to research and industry positions in AI/ML as I complete my M.S. in 2025. My interests span generative AI, natural language processing, large language model engineering, multimodal systems and MLOps. I welcome opportunities ranging from internships and fellowships to full‑time roles and collaborative research projects. I'm particularly excited to work on state‑of‑the‑art LLMs, sensor‑driven AI for smart cities and robotics, and initiatives that emphasize ethical and socially responsible AI. I'm eager to collaborate with universities, startups and established companies across technology, healthcare and robotics sectors.";
   },
 });

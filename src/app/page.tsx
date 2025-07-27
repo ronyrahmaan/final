@@ -1,9 +1,9 @@
 /**
- * This is the landing page for Md A Rahman's AI research portfolio. It largely
- * follows the structure of the original page from the upstream project but
- * has been adapted to remove references to the previous owner (Raphael
- * Girud) and to improve the user experience. The quick‑question prompts
- * align with the updated HelperBoost component and the "Open to
+ * This is the landing page for Md A Rahman's AI research portfolio. It
+ * largely follows the structure of the original page from the upstream
+ * project but has been adapted to remove references to the previous owner
+ * (Raphael Girud) and to improve the user experience. The quick‑question
+ * prompts align with the updated HelperBoost component and the "Open to
  * Collaborate" button has been replaced with a modal that outlines
  * Rahman's collaboration interests and internship opportunities.
  */
@@ -15,11 +15,12 @@ import { Button } from '@/components/ui/button';
 import { GithubButton } from '@/components/ui/github-button';
 import WelcomeModal from '@/components/welcome-modal';
 import { motion } from 'framer-motion';
+import type { Variants } from 'framer-motion';
 import {
   ArrowRight,
   BriefcaseBusiness,
-  Laugh,
   Layers,
+  Laugh,
   PartyPopper,
   UserRoundSearch,
   BriefcaseIcon,
@@ -32,23 +33,32 @@ import OpenToCollaborateModal from '@/components/open-to-collaborate-modal';
 
 /* ---------- quick‑question data ---------- */
 // These prompts mirror those in the updated HelperBoost component and are
-// tailored to Md A Rahman's research and interests.
+// tailored to Md A Rahman's research and interests. The keys correspond
+// to UI buttons shown on the landing page.
 const questions = {
-  Me: 'Who are you? I want to know more about you.',
+  About: 'Who are you? I want to know more about you.',
   Projects: 'What are your projects? What research are you working on right now?',
   Skills: 'What are your skills? Give me a list of your technical and research skills.',
-  Fun: 'Tell me about your achievements and background. What are your hobbies?',
+  Hobbies: 'Tell me about your hobbies and personal interests.',
   Contact: 'How can I reach you? Are you open to collaboration?',
   Experience: 'Tell me about your work experience and roles you have held.',
+  Vision: 'What is your long‑term vision and what motivates you?',
+  Research: 'What are your main research areas and current projects?',
+  Internships: 'Are you open to internships or other forms of collaboration?',
+  Resume: 'Where can I download your full CV?',
 } as const;
 
 const questionConfig = [
-  { key: 'Me', color: '#329696', icon: Laugh },
+  { key: 'About', color: '#329696', icon: Laugh },
   { key: 'Projects', color: '#3E9858', icon: BriefcaseBusiness },
   { key: 'Skills', color: '#856ED9', icon: Layers },
-  { key: 'Fun', color: '#B95F9D', icon: PartyPopper },
+  { key: 'Hobbies', color: '#B95F9D', icon: PartyPopper },
   { key: 'Contact', color: '#C19433', icon: UserRoundSearch },
   { key: 'Experience', color: '#F17C0A', icon: BriefcaseIcon },
+  { key: 'Vision', color: '#009688', icon: Laugh },
+  { key: 'Research', color: '#7D4CDB', icon: Layers },
+  { key: 'Internships', color: '#E09142', icon: BriefcaseIcon },
+  { key: 'Resume', color: '#5A697B', icon: BriefcaseBusiness },
 ] as const;
 
 /* ---------- component ---------- */
@@ -57,8 +67,8 @@ export default function Home() {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Dynamic roles that rotate after the main heading. Each role represents a
-  // professional descriptor relevant to Rahman's expertise. Colors map to
+  // Dynamic roles that rotate after the main heading. Each role represents
+  // a professional descriptor relevant to Rahman's expertise. Colors map to
   // each role for subtle visual variation. The index increments every few
   // seconds using a timer.
   const roles = [
@@ -84,24 +94,23 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  const goToChat = (query: string) =>
-    router.push(`/chat?query=${encodeURIComponent(query)}`);
-
+  const goToChat = (query: string) => router.push(`/chat?query=${encodeURIComponent(query)}`);
   /* hero animations (unchanged) */
-  const topElementVariants = {
+
+  const topElementVariants: Variants = {
     hidden: { opacity: 0, y: -60 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: 'ease', duration: 0.8 },
+      transition: { type: 'tween' as const, duration: 0.8 },
     },
   };
-  const bottomElementVariants = {
+  const bottomElementVariants: Variants = {
     hidden: { opacity: 0, y: 80 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: 'ease', duration: 0.8, delay: 0.2 },
+      transition: { type: 'tween' as const, duration: 0.8, delay: 0.2 },
     },
   };
 
@@ -138,12 +147,7 @@ export default function Home() {
 
       {/* GitHub button */}
       <div className="absolute top-6 right-8 z-20">
-        <GithubButton
-          animationDuration={1.5}
-          label="Star"
-          size={'sm'}
-          repoUrl="https://github.com/ronyrahmaan"
-        />
+        <GithubButton animationDuration={1.5} label="Star" size={'sm'} repoUrl="https://github.com/ronyrahmaan" />
       </div>
 
       <div className="absolute top-6 left-6 z-20">

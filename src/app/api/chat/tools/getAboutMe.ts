@@ -2,7 +2,7 @@ import { tool } from 'ai';
 import { z } from 'zod';
 
 // Provides a concise personal introduction for Rahman.
-export const getPresentation = tool({
+export const getAboutMe = tool({
   description:
     'This tool returns a concise personal introduction of Md A Rahman. It is used to answer the question "Who are you?" or "Tell me about yourself".',
   parameters: z.object({}),

@@ -2,15 +2,20 @@ import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
 import { SYSTEM_PROMPT } from './prompt';
 import { getContact } from './tools/getContact';
-import { getCrazy } from './tools/getCrazy';
-import { getPresentation } from './tools/getPresentation';
+// Import the personal note tool instead of the removed getCrazy tool
+import { getPersonalNote } from './tools/getPersonalNote';
+import { getAboutMe } from './tools/getAboutMe';
 import { getProjects } from './tools/getProjects';
 import { getResume } from './tools/getResume';
 import { getSkills } from './tools/getSkills';
+import { getExperience } from './tools/getExperience';
+import { getInternship } from './tools/getInternship';
+import { getVision } from './tools/getVision';
+import { getResearch } from './tools/getResearch';
 
 export const maxDuration = 30;
 
-// ❌ Pas besoin de l'export ici, Next.js n'aime pas ça
+// Handles unknown errors and ensures a string response
 function errorHandler(error: unknown) {
   if (error == null) {
     return 'Unknown error';
@@ -33,12 +38,15 @@ export async function POST(req: Request) {
 
     const tools = {
       getProjects,
-      getPresentation,
+      getAboutMe,
       getResume,
       getContact,
       getSkills,
-      getCrazy,
-    
+      getPersonalNote,
+      getExperience,
+      getInternship,
+      getVision,
+      getResearch,
     };
 
     const result = streamText({
